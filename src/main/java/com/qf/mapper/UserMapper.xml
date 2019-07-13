@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qf.mapper.UserMapper">
+    <sql id="s*f">
+        select * from
+    </sql>
+    <select id="getUser" resultType="com.qf.pojo.User">
+        <include refid="s*f"></include>
+        users where username = #{username} and password = #{password} and status = 1
+    </select>
+    <insert id="insertUser">
+        insert users value(default,#{username},#{password},1)
+    </insert>
+    <resultMap id="ProfileAl" type="com.qf.pojo.Profile">
+        <id column="id" property="id"></id>
+        <result property="name" column="name"></result>
+        <result property="birthday" column="birthday"></result>
+        <result property="gender" column="gender"></result>
+        <result property="career" column="career"></result>
+        <result property="address" column="address"></result>
+        <result property="mobile" column="mobile"></result>
+        <result property="picture" column="picture"></result>
+        <association property="user" javaType="com.qf.pojo.User">
+            <id column="uid" property="uid"></id>
+            <result column="username" property="username"></result>
+            <result column="password" property="password"></result>
+            <result column="status" property="status"></result>
+        </association>
+    </resultMap>
+    <select id="getProfileAll" resultMap="ProfileAl">
+        <include refid="s*f"></include>
+        Profile inner join users on users.uid = profile.uid where profile.uid = #{uid}
+    </select>
+    <select id="findUser" resultType="int">
+        select uid from users where username = #{uname}
+    </select>
+    <select id="getPassword" parameterType="string" resultType="string">
+        select password from users where username = #{username}
+    </select>
+    <select id="getRolesByUsername" parameterType="string" resultType="string">
+        select role_name from user_roles where username = #{username}
+    </select>
+    <select id="getPermissionByRole" resultType="string">
+        select permission from roles_permissions where rolename in
+        <foreach collection="list" item="value" separator="," open="(" close=")">
+            #{value}
+        </foreach>
+    </select>
+</mapper>

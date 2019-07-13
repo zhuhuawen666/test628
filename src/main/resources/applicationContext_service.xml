@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+    <!-- 扫描 service 和 事务管理-->
+    <context:component-scan base-package="com.qf" use-default-filters="false">
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Service"/>
+    </context:component-scan>
+
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+    <bean id="interceptor" class="com.qf.Interceptor.Interceptor"></bean>
+       <tx:advice id="advice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="get*" read-only="true" propagation="SUPPORTS" timeout="10"/>
+            <tx:method name="update*" read-only="false" propagation="REQUIRED" timeout="10"></tx:method>
+        </tx:attributes>
+    </tx:advice>
+
+
+
+    <aop:config>
+
+        <aop:pointcut id="pc" expression="execution(* com..service.*Impl.*(..))"/>
+        <aop:advisor advice-ref="advice" pointcut-ref="pc"></aop:advisor>
+
+        <aop:aspect ref="interceptor">
+
+            <!--前置  肯定执行-->
+            <aop:before method="before" pointcut-ref="pc"></aop:before>
+            <!-- 错误后置 报错才会执行-->
+            <aop:after-throwing method="afterthrowing" pointcut-ref="pc" throwing="throwable"></aop:after-throwing>
+            <!-- 一定会执行 finally-->
+            <aop:after method="after" pointcut-ref="pc"></aop:after>
+            <!-- 普通后置  报错不执行-->
+            <aop:after-returning method="afterReturning" pointcut-ref="pc"></aop:after-returning>
+            <!-- 环绕 如果报错 后面的不执行-->
+            <aop:around method="around" pointcut-ref="pc"></aop:around>
+        </aop:aspect>
+
+    </aop:config>
+</beans>

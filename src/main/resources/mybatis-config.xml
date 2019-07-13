@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+    <!-- properties属性：引入配置文件 下面可以用 也可以不写
+    <properties resource="c3p0.prorerties">
+        替换或者扩展 没有就加 有就换
+        <property name="url" value="abc"/>
+    </properties>
+      别名属性  扫描包下的类起一个别名  默认为类名首字母小写
+      这样mapper.xml 中可以使用别名进行类型引用
+   <typeAliases>
+       typeAlias是单独为某一个类取别名
+       <typeAlias type="com.qf.pojo.User"></typeAlias>
+       <package name="com.qf.pojo"/>
+
+   </typeAliases>-->
+    <!-- 环境  -->
+
+    <settings>
+        <setting name="logImpl" value="STDOUT_LOGGING"/>
+    </settings>
+    <!--分页配置-->
+    <plugins>
+        <plugin interceptor="com.github.pagehelper.PageHelper">
+            <property name="dialect" value="mysql"/>
+        </plugin>
+        <!--5.0版本pagehelper-->
+        <!-- <plugin interceptor="com.github.pagehelper.PageInterceptor">
+                <property name="helperDialect" value="mysql"/>
+        </plugin> -->
+    </plugins>
+
+    <!--
+    <environments default="abc">
+
+        配置 数据库连接的基本信息
+        <environment id="abc">
+             开启事务 transactionManager事务管理器
+            JDBC 支持事务
+            MANAGED 不需要mybatis管理事务
+
+            <transactionManager type="JDBC"/>
+             固定的  表示 以连接池的形式链接获取
+            datasource 链接数据库相关的
+            type UNPOOLED不用连接池
+            POOLED使用连接池 具有UNPOOLED所没有的一些连接池相关属性属性 不需要每次创建
+
+            <dataSource type="POOLED">
+                <property name="driver" value="com.mysql.jdbc.Driver"/>
+                <property name="url" value="jdbc:mysql://localhost:3306/boke?characterEncoding=utf8"/>
+                <property name="username" value="root"/>
+                <property name="password" value="zhuhuawen123"/>
+
+            </dataSource>
+        </environment>
+    </environments>
+
+    <mappers>
+        <package name="com.qf.mapper"/>
+    </mappers>
+    -->
+</configuration>

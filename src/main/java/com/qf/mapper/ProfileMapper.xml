@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qf.mapper.ProfileMapper">
+    <update id="updateProfile" parameterType="com.qf.pojo.Profile">
+        update Profile
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="birthday != null">
+                birthday = #{birthday},
+            </if>
+            <if test="gender != null">
+                gender = #{gender},
+            </if>
+            <if test="career != null">
+                career = #{career},
+            </if>
+            <if test="address != null">
+                address = #{address},
+            </if>
+            <if test="mobile != 0">
+                mobile = #{mobile},
+            </if>
+            <if test="picture != null">
+                picture = #{picture}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+    <select id="getProfile" resultType="com.qf.pojo.Profile" parameterType="int">
+        select * from Profile where id = #{id}
+    </select>
+    <delete id="deleteProfile" parameterType="int">
+        delete from Profile where id = #{id}
+    </delete>
+</mapper>
